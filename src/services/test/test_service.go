@@ -1,15 +1,19 @@
 package test
 
 import (
+	"fmt"
 	"github.com/chenjiandongx/go-echarts/charts"
 	"github.com/gin-gonic/gin"
+	"github.com/gomemcache/memcache"
 	"github.com/rs/zerolog/log"
 	"go-go-go/src/data"
 	"go-go-go/src/scheduler"
+	"go-go-go/src/single-cache"
 	"go-go-go/src/utils"
 	"net/http"
 	"sort"
 	"strconv"
+	//"tianrang-client-center/src/common"
 	"time"
 )
 
@@ -168,5 +172,61 @@ func SeeEatWhat(c *gin.Context) {
 	if err != nil {
 		log.Warn().Msg(err.Error())
 		utils.ErrorResp(c, http.StatusBadRequest, 400, err.Error())
+	}
+}
+
+var mc *memcache.Client
+
+func init() {
+	// 需要自己开启
+	//mc = memcache.New("127.0.0.1:11211")
+}
+
+func TestMemCacheSet(c *gin.Context) {
+	var key = "foo"
+	single_cache.Set(key, "123", 10)
+}
+
+func TestMemCacheExpire(c *gin.Context) {
+	var key = "foo"
+	it, ok := single_cache.Get(key)
+	if ok {
+		println(ok)
+	} else {
+		println(it)
+	}
+}
+
+func TestMemCacheSet1(c *gin.Context) {
+
+	var key = "foo"
+	mc.Set(&memcache.Item{Key: key, Value: []byte("my value")})
+	it, err := mc.Get(key)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	if string(it.Key) == key {
+		fmt.Println("value is ", string(it.Value))
+	} else {
+		fmt.Println("Get failed")
+	}
+	mc.Set(&memcache.Item{Key: key, Value: []byte("my value 2")})
+	it2, _ := mc.Get(key)
+	if string(it2.Key) == key {
+		fmt.Println("value is ", string(it2.Value))
+	} else {
+		fmt.Println("Get failed")
+	}
+	mc.Touch(key, 100)
+}
+
+func TestMemCacheExpire1(c *gin.Context) {
+	var key = "foo"
+	it, _ := mc.Get(key)
+	if string(it.Key) == "foo" {
+		fmt.Println("value is ", string(it.Value))
+	} else {
+		fmt.Println("Get failed")
 	}
 }

@@ -21,4 +21,10 @@ var MonitorRoutes = map[string]map[string]gin.HandlersChain{
 	"eat_what": {
 		"GET": gin.HandlersChain{SeeEatWhat},
 	},
+	"test_mc_set": {
+		"GET": gin.HandlersChain{TestMemCacheSet},
+	},
+	"test_mc_expire": {
+		"GET": gin.HandlersChain{TestMemCacheExpire},
+	},
 }
