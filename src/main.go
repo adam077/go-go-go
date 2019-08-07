@@ -8,6 +8,7 @@ import (
 
 func main() {
 	if data.GetConfig(data.Scheduler) != "" {
+		// 多实例的话感觉推荐用环境变量
 		scheduler.Run()
 	}
 	engine := services.SetupEngine()

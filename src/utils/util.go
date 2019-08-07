@@ -2,6 +2,7 @@ package utils
 
 import (
 	"github.com/rs/zerolog/log"
+	"github.com/satori/go.uuid"
 	"runtime"
 	"time"
 )
@@ -63,4 +64,8 @@ func GetNowTime() (int64, string, int, int) {
 	hour := now.Hour()
 	min := (now.Minute() / 5) * 5
 	return now.Unix(), today, hour, min
+}
+
+func GetUUID() string {
+	return uuid.NewV4().String()
 }

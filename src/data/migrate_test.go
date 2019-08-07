@@ -5,8 +5,7 @@ import (
 )
 
 func TestMigrateTable(t *testing.T) {
-	//t1()
-	t3()
+	t4()
 }
 
 func t1() {
@@ -32,4 +31,15 @@ func t2() {
 func t3() {
 	db := GetDataDB("config")
 	db.AutoMigrate(&ConfigTable{})
+}
+
+func t4() {
+	db := GetDataDB("default")
+	MigrateTable(db, &WeiboUser{})
+	MigrateTable(db, &WeiboFollow{})
+
+	one := &WeiboUser{}
+	one.ID = "e2e32ebd-69cb-4855-b4f4-97d5ec2e71fa"
+	one.Name = "NobodyHu"
+	db.Create(one)
 }

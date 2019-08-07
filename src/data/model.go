@@ -15,7 +15,7 @@ func (TableTest) TableName() string {
 }
 
 type BaseModelUUID struct {
-	ID string `gorm:"column:id;type:char(32);primary_key;not null"`
+	ID string `gorm:"column:id;type:char(36);primary_key;not null"`
 	BaseModel
 }
 
