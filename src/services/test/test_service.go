@@ -80,7 +80,7 @@ func GetZhihuEcharts(c *gin.Context) {
 		hourList = append(hourList, strconv.Itoa(hour))
 	}
 	bar := charts.NewLine()
-	bar.SetGlobalOptions(charts.TitleOpts{Title: "知乎"})
+	bar.SetGlobalOptions(charts.TitleOpts{Title: "知乎", Bottom: "center"})
 	contentMap := make(map[string]map[int]int)
 	for _, ontData := range datas {
 		if _, ok := contentMap[ontData.Content]; !ok {
@@ -125,7 +125,7 @@ func GetWeiboEcharts(c *gin.Context) {
 		hourList = append(hourList, strconv.Itoa(hour))
 	}
 	bar := charts.NewLine()
-	bar.SetGlobalOptions(charts.TitleOpts{Title: "微博"})
+	bar.SetGlobalOptions(charts.TitleOpts{Title: "微博", Bottom: "center"})
 	contentMap := make(map[string]map[int]int)
 	for _, ontData := range datas {
 		if _, ok := contentMap[ontData.Content]; !ok {
@@ -170,7 +170,7 @@ func GetBaiduEcharts(c *gin.Context) {
 		hourList = append(hourList, strconv.Itoa(hour))
 	}
 	bar := charts.NewLine()
-	bar.SetGlobalOptions(charts.TitleOpts{Title: "百度"})
+	bar.SetGlobalOptions(charts.TitleOpts{Title: "百度", Bottom: "center"})
 	contentMap := make(map[string]map[int]int)
 	for _, ontData := range datas {
 		if _, ok := contentMap[ontData.Content]; !ok {
