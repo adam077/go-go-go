@@ -13,7 +13,7 @@ type HotSpotRunner struct {
 
 func (runner HotSpotRunner) Run() {
 	GetWeiBo()
-	GetBaiDu()
+	//GetBaiDu() // 百度接口变了
 	GetZhiHu()
 }
 
