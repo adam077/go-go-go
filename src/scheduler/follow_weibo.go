@@ -30,14 +30,14 @@ func (runner FollowWeibo) Run() {
 
 func do() {
 	log.Info().Msg("start follow")
-	// 发送投票选项
-	succNum := 0
 	userDatas := data.GetWeiboUserFollow("NobodyHu")
 	for _, userData := range userDatas {
 		var followMap = make(map[string]bool)
 		for _, follower := range userData.WeiboFollows {
 			followMap[follower.UID] = true
 		}
+		succNum := 0
+		fail := 0
 		uids, _ := weibo.GetUsers("互粉", userData.Cookie, pages)
 		for _, uid := range uids {
 			if _, ok := followMap[uid]; ok {
@@ -55,6 +55,15 @@ func do() {
 				})
 				followMap[uid] = true
 				succNum += 1
+			} else {
+				fail += 1
+				if fail >= 2 {
+					chatId := getDingChatId()
+					if chatId != "" {
+						go ding_talk.SendDingMessage(chatId, fmt.Sprintf("%s follow break for %s", uid, err.Error()))
+					}
+					break
+				}
 			}
 		}
 
