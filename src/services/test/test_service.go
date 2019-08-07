@@ -74,23 +74,113 @@ func GetZhihuEcharts(c *gin.Context) {
 	if params.Limit == 0 {
 		params.Limit = 3
 	}
-	contents, zhihuDatas := data.GetZhihuData(params.LogDate, params.Limit)
+	contents, datas := data.GetZhihuData(params.LogDate, params.Limit)
 	hourList := make([]string, 0)
 	for hour := 0; hour < 24; hour++ {
 		hourList = append(hourList, strconv.Itoa(hour))
 	}
 	bar := charts.NewLine()
-	bar.SetGlobalOptions(charts.TitleOpts{Title: "zhihu"})
-	zhihuMap := make(map[string]map[int]int)
-	for _, ontData := range zhihuDatas {
-		if _, ok := zhihuMap[ontData.Content]; !ok {
-			zhihuMap[ontData.Content] = make(map[int]int)
+	bar.SetGlobalOptions(charts.TitleOpts{Title: "知乎"})
+	contentMap := make(map[string]map[int]int)
+	for _, ontData := range datas {
+		if _, ok := contentMap[ontData.Content]; !ok {
+			contentMap[ontData.Content] = make(map[int]int)
 		}
-		zhihuMap[ontData.Content][ontData.LogHour] = ontData.Rank
+		contentMap[ontData.Content][ontData.LogHour] = ontData.Rank
 	}
 	bar.AddXAxis(hourList)
 	for _, content := range contents {
-		hourMap := zhihuMap[content]
+		hourMap := contentMap[content]
+		rankData := make([]int, 0)
+		for hour := 0; hour < 24; hour++ {
+			rankData = append(rankData, GetRank(hourMap, hour))
+		}
+		bar.AddYAxis(content, rankData)
+	}
+	err := bar.Render(c.Writer)
+	if err != nil {
+		log.Warn().Msg(err.Error())
+		utils.ErrorResp(c, http.StatusBadRequest, 400, err.Error())
+	}
+}
+
+func GetWeiboEcharts(c *gin.Context) {
+	params := struct {
+		LogDate string `form:"logDate"`
+		Limit   int    `form:"limit"`
+	}{}
+	if err := c.ShouldBindQuery(&params); err != nil {
+		utils.ErrorResp(c, http.StatusBadRequest, 0, "")
+		return
+	}
+	if params.LogDate == "" {
+		params.LogDate = utils.GetTimeDateString(time.Now())
+	}
+	if params.Limit == 0 {
+		params.Limit = 3
+	}
+	contents, datas := data.GetWeiboData(params.LogDate, params.Limit)
+	hourList := make([]string, 0)
+	for hour := 0; hour < 24; hour++ {
+		hourList = append(hourList, strconv.Itoa(hour))
+	}
+	bar := charts.NewLine()
+	bar.SetGlobalOptions(charts.TitleOpts{Title: "微博"})
+	contentMap := make(map[string]map[int]int)
+	for _, ontData := range datas {
+		if _, ok := contentMap[ontData.Content]; !ok {
+			contentMap[ontData.Content] = make(map[int]int)
+		}
+		contentMap[ontData.Content][ontData.LogHour] = ontData.Rank
+	}
+	bar.AddXAxis(hourList)
+	for _, content := range contents {
+		hourMap := contentMap[content]
+		rankData := make([]int, 0)
+		for hour := 0; hour < 24; hour++ {
+			rankData = append(rankData, GetRank(hourMap, hour))
+		}
+		bar.AddYAxis(content, rankData)
+	}
+	err := bar.Render(c.Writer)
+	if err != nil {
+		log.Warn().Msg(err.Error())
+		utils.ErrorResp(c, http.StatusBadRequest, 400, err.Error())
+	}
+}
+
+func GetBaiduEcharts(c *gin.Context) {
+	params := struct {
+		LogDate string `form:"logDate"`
+		Limit   int    `form:"limit"`
+	}{}
+	if err := c.ShouldBindQuery(&params); err != nil {
+		utils.ErrorResp(c, http.StatusBadRequest, 0, "")
+		return
+	}
+	if params.LogDate == "" {
+		params.LogDate = utils.GetTimeDateString(time.Now())
+	}
+	if params.Limit == 0 {
+		params.Limit = 3
+	}
+	contents, datas := data.GetBaiduData(params.LogDate, params.Limit)
+	hourList := make([]string, 0)
+	for hour := 0; hour < 24; hour++ {
+		hourList = append(hourList, strconv.Itoa(hour))
+	}
+	bar := charts.NewLine()
+	bar.SetGlobalOptions(charts.TitleOpts{Title: "百度"})
+	contentMap := make(map[string]map[int]int)
+	for _, ontData := range datas {
+		if _, ok := contentMap[ontData.Content]; !ok {
+			contentMap[ontData.Content] = make(map[int]int)
+		}
+		contentMap[ontData.Content][ontData.LogHour] = ontData.Rank
+	}
+	bar.AddXAxis(hourList)
+	for _, content := range contents {
+		hourMap := contentMap[content]
 		rankData := make([]int, 0)
 		for hour := 0; hour < 24; hour++ {
 			rankData = append(rankData, GetRank(hourMap, hour))
