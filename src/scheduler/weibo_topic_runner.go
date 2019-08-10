@@ -15,6 +15,7 @@ type WeiboTopicRunner struct {
 func (runner WeiboTopicRunner) Run() {
 	userDatas := data.GetWeiboUserFollow("NobodyHu")
 	for _, me := range userDatas {
+		me.Cookie = weibo.GetCookie("13003638736", "hu5845")
 		GetWeiBoTopic(me.Cookie)
 	}
 

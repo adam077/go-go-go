@@ -38,7 +38,7 @@ func ttt(cookie, cat string) (map[int]string, error) {
 			break
 		}
 	}
-	if len(result) < 1 {
+	if "cat" == "all" && len(result) < 1 {
 		return result, errors.New(m[cat] + "no topics")
 	}
 	log.Info().Str("cat", cat).Int("num", len(result)).Msg("")

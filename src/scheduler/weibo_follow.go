@@ -29,8 +29,8 @@ func (runner FollowWeibo) Run() {
 			}
 			succNum := 0
 			fail := 0
-			//uids, _ := weibo.GetUsers("互粉", userData.Cookie, pages)
-			uids, _ := weibo.GetUsersFromHufen(userData.Cookie, pages)
+			uids, _ := weibo.GetUsers("互粉", userData.Cookie, pages)
+			//uids, _ := weibo.GetUsersFromHufen(userData.Cookie, pages)
 			//uids, _ := weibo.GetUsersFromCantSleep(userData.Cookie, pages)
 			for _, uid := range uids {
 				if _, ok := followMap[uid]; ok {
