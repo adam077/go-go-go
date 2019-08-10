@@ -1,9 +1,12 @@
 package utils
 
 import (
+	"fmt"
 	"github.com/rs/zerolog/log"
 	"github.com/satori/go.uuid"
+	"regexp"
 	"runtime"
+	"strings"
 	"time"
 )
 
@@ -68,4 +71,44 @@ func GetNowTime() (int64, string, int, int) {
 
 func GetUUID() string {
 	return uuid.NewV4().String()
+}
+
+func FindBetween(str []byte, left, right string) []string {
+
+	return FindBetweenInstr(string(str), left, right)
+
+	result := make([]string, 0)
+	// var r = fmt.Sprintf("%s[^%s]+%s", left, right, right) // 这个只适合单个
+
+	var r = fmt.Sprintf("%s.*?%s", left, right) // 懒惰限定符
+	reg := regexp.MustCompile(r)
+	for _, one := range reg.FindAll(str, -1) {
+		result = append(result, strings.Replace(strings.Replace(string(one), left, "", -1), right, "", -1))
+	}
+	// https://www.cnblogs.com/jkko123/p/8329515.html
+	// https://www.cnblogs.com/golove/p/3270918.html
+	// https://www.runoob.com/regexp/regexp-syntax.html
+	// https://www.debuggex.com/
+	return result
+}
+
+func FindBetweenInstr(str string, left, right string) []string {
+	newLeft := "aaaLeft"
+	newRight := "aaaRight"
+	str = strings.Replace(str, left, newLeft, -1)
+	str = strings.Replace(str, right, newRight, -1)
+
+	result := make([]string, 0)
+	// var r = fmt.Sprintf("%s[^%s]+%s", left, right, right) // 这个只适合单个
+
+	var r = fmt.Sprintf("%s.*?%s", newLeft, newRight) // 懒惰限定符
+	reg := regexp.MustCompile(r)
+	for _, one := range reg.FindAll([]byte(str), -1) {
+		result = append(result, strings.Replace(strings.Replace(string(one), newLeft, "", -1), newRight, "", -1))
+	}
+	// https://www.cnblogs.com/jkko123/p/8329515.html
+	// https://www.cnblogs.com/golove/p/3270918.html
+	// https://www.runoob.com/regexp/regexp-syntax.html
+	// https://www.debuggex.com/
+	return result
 }

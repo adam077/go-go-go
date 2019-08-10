@@ -12,5 +12,5 @@ func Run() {
 	jobrunner.Schedule("0 0 11,17 * * *", EatWhat{do: Choose})
 	jobrunner.Schedule("0 0 12,18 * * *", EatWhat{do: Result})
 
-	jobrunner.Schedule("0 15,45 * * * *", FollowWeibo{})
+	jobrunner.Schedule("@every 5m", WeiboTopicRunner{})
 }

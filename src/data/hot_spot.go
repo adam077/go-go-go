@@ -59,3 +59,22 @@ type ZhiHuHotSpotMinuteReport struct {
 func (ZhiHuHotSpotMinuteReport) TableName() string {
 	return "zhihu_hot_spot_minute_report"
 }
+
+type WeiBoTopicMinuteReport struct {
+	ID int64 `gorm:"column:id;type:bigserial;primary_key;not null"`
+
+	LogDate string `gorm:"column:log_date;type:char(10)"`
+	LogHour int    `gorm:"column:log_hour;type:int4"`
+	LogMin  int    `gorm:"column:log_min;type:int4"`
+
+	Cat     string `gorm:"column:cat;type:text"`
+	Content string `gorm:"column:content;type:text"`
+	Rank    int    `gorm:"column:rank;type:int4"`
+
+	RequestTS time.Time `gorm:"column:request_ts;type:timestamp with time zone"`
+	BaseModel
+}
+
+func (WeiBoTopicMinuteReport) TableName() string {
+	return "weibo_topic_minute_report"
+}

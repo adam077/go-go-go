@@ -6,9 +6,14 @@ import (
 )
 
 func TestUtils(t *testing.T) {
-	t1()
+	t2()
 }
 
 func t1() {
 	fmt.Println(GetUUID())
+}
+
+func t2() {
+	fmt.Println(FindBetween([]byte("asdfgyhjkfsdj"), "f", "j"))
+	// fghj   fsdj
 }

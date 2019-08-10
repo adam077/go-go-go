@@ -6,9 +6,13 @@ import (
 	"time"
 )
 
-var cookie = "SINAGLOBAL=7188266670065.255.1499346921203; login_sid_t=8ab13d9a1abb502c3be871806d4c3f00; cross_origin_proto=SSL; _s_tentry=login.sina.com.cn; Apache=2154066483990.2334.1565109327603; ULV=1565109327616:39:1:1:2154066483990.2334.1565109327603:1563680713146; UOR=,weibo.com,login.sina.com.cn; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9Whaco_OwkDTB-SH898JGmvo5JpX5K2hUgL.FoqX1K2XehMReKM2dJLoI7y1dcia9GLzUBtt; ALF=1596647717; SSOLoginState=1565111718; SCF=AkQsjpu9Rz_J_k6nLpDzVEDRK1LUfVBstmGqJWe8pgYWvl8nEHEhFLbgYA-NJh_qREgzi3eP52jeVlLO7lI6zwQ.; SUB=_2A25wTcX2DeRhGeBK4lMV8CnEyjuIHXVTOrA-rDV8PUNbmtAKLXDTkW9NR2dre3AsDvQRuHhc2t2vCl8D3zdsbXLu; SUHB=00xp9GV9fpJd7x; un=13003638736; wvr=6; webim_unReadCount=%7B%22time%22%3A1565112780544%2C%22dm_pub_total%22%3A0%2C%22chat_group_client%22%3A0%2C%22allcountNum%22%3A1%2C%22msgbox%22%3A0%7D; WBStorage=edfd723f2928ec64|undefined"
+var cookie = "SINAGLOBAL=7188266670065.255.1499346921203; un=13003638736; wvr=6; UOR=,weibo.com,www.baidu.com; login_sid_t=6ebb73623df1b7903faf62fa49d6cb86; cross_origin_proto=SSL; _s_tentry=passport.weibo.com; Apache=5085805618345.12.1565282215469; ULV=1565282215481:40:2:2:5085805618345.12.1565282215469:1565109327616; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9Whaco_OwkDTB-SH898JGmvo5JpX5K2hUgL.FoqX1K2XehMReKM2dJLoI7y1dcia9GLzUBtt; ALF=1596818235; SSOLoginState=1565282236; SCF=AkQsjpu9Rz_J_k6nLpDzVEDRK1LUfVBstmGqJWe8pgYWrHKWS6If-rGo13XjH039baVoIqFoSyCCMEg4AS9ux2Y.; SUB=_2A25wSD_sDeRhGeBK4lMV8CnEyjuIHXVTPBYkrDV8PUNbmtAKLVH5kW9NR2drexkw8j12XSgMliOh155SiHXbvN5s; SUHB=0mxUzbDdWd5JHg; webim_unReadCount=%7B%22time%22%3A1565282272301%2C%22dm_pub_total%22%3A0%2C%22chat_group_client%22%3A0%2C%22allcountNum%22%3A0%2C%22msgbox%22%3A0%7D"
 
 func TestWeibo(t *testing.T) {
+	t2()
+}
+
+func t1() {
 	uids, _ := GetUsers("互粉", cookie, 3)
 	for _, uid := range uids {
 		time.Sleep(10 * time.Second)
@@ -17,4 +21,12 @@ func TestWeibo(t *testing.T) {
 			fmt.Println(err)
 		}
 	}
+}
+
+func t2() {
+	fmt.Println(GetUserStatus(cookie, "6491407817"))
+}
+
+func t3() {
+	GetUsersFromHufen(cookie, 3)
 }
