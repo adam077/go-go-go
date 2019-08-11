@@ -58,9 +58,10 @@ func UpdateWeiboFollower(targets []WeiboFollow) error {
 
 type WeiboUser struct {
 	BaseModelUUID
-	Name   string `gorm:"column:name;type:text"`
-	Cookie string `gorm:"column:cookie;type:text"`
-	Uid    string `gorm:"column:uid;type:text"`
+	Name      string `gorm:"column:name;type:text"`
+	LoginName string `gorm:"column:login_name;type:text"`
+	Password  string `gorm:"column:password;type:text"`
+	Uid       string `gorm:"column:uid;type:text"`
 
 	Status int `gorm:"column:status;type:int4"`
 

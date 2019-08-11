@@ -7,28 +7,28 @@ import (
 	"strconv"
 )
 
-func GetWeiboTopic(cookie string) (map[string]map[int]string, error) {
+func GetWeiboTopic(cookie string) (map[string]map[int]string, map[string]string) {
 	var err error
+	errList := make(map[string]string, 0)
 	result := make(map[string]map[int]string)
 	for cat, name := range m {
 		result[name], err = ttt(cookie, cat)
 		if err != nil {
-			break
+			errList[m[cat]] = err.Error()
 		}
 	}
-	return result, err
+	return result, errList
 }
 
 func ttt(cookie, cat string) (map[int]string, error) {
+	var err error
+	var a []byte
 	pages := 100
 	result := make(map[int]string)
 	rank := 0
 	for i := 1; i <= pages; i++ {
 		var urlStr = "https://d.weibo.com/231650_ctg1_-_" + cat + "?Pl_Discover_Pt6Rank__4_page=" + strconv.Itoa(i)
-		a, err := utils.QueryGet(urlStr, map[string]string{"Cookie": cookie})
-		if err != nil {
-			return result, err
-		}
+		a, err = utils.QueryGet(urlStr, map[string]string{"Cookie": cookie})
 		topics := utils.FindBetween(a, " alt=\\\"#", "#\\\" class=\\\"pic")
 		for _, topic := range topics {
 			rank += 1
@@ -38,11 +38,11 @@ func ttt(cookie, cat string) (map[int]string, error) {
 			break
 		}
 	}
-	if "cat" == "all" && len(result) < 1 {
-		return result, errors.New(m[cat] + "no topics")
+	if cat == "all" && len(result) < 1 {
+		err = errors.New(m[cat] + "no topics")
 	}
 	log.Info().Str("cat", cat).Int("num", len(result)).Msg("")
-	return result, nil
+	return result, err
 
 }
 

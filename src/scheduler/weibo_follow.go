@@ -23,13 +23,14 @@ func (runner FollowWeibo) Run() {
 		log.Info().Msg("start follow")
 		userDatas := data.GetWeiboUserFollow("")
 		for _, userData := range userDatas {
+			cookie := weibo.GetCookie(userData.LoginName, userData.Password)
 			var followMap = make(map[string]bool)
 			for _, follower := range userData.WeiboFollows {
 				followMap[follower.UID] = true
 			}
 			succNum := 0
 			fail := 0
-			uids, _ := weibo.GetUsers("互粉", userData.Cookie, pages)
+			uids, _ := weibo.GetUsers("互粉", cookie, pages)
 			//uids, _ := weibo.GetUsersFromHufen(userData.Cookie, pages)
 			//uids, _ := weibo.GetUsersFromCantSleep(userData.Cookie, pages)
 			for _, uid := range uids {
@@ -39,7 +40,7 @@ func (runner FollowWeibo) Run() {
 				}
 				var s = seconds + rand.Intn(3)
 				time.Sleep(time.Duration(s) * time.Second)
-				err := weibo.Follow(uid, userData.Cookie)
+				err := weibo.Follow(uid, cookie)
 				if err == nil {
 					data.UpdateWeiboFollower([]data.WeiboFollow{
 						{

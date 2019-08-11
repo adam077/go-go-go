@@ -1,6 +1,7 @@
 package scheduler
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/rs/zerolog/log"
 	"go-go-go/src/data"
@@ -15,18 +16,20 @@ type WeiboTopicRunner struct {
 func (runner WeiboTopicRunner) Run() {
 	userDatas := data.GetWeiboUserFollow("NobodyHu")
 	for _, me := range userDatas {
-		me.Cookie = weibo.GetCookie("13003638736", "hu5845")
-		GetWeiBoTopic(me.Cookie)
+		cookie := weibo.GetCookie(me.LoginName, me.Password)
+		GetWeiBoTopic(cookie)
 	}
 
 }
 
 func GetWeiBoTopic(cookie string) {
+	var err error
 
 	ts, today, hour, min := utils.GetNowTime()
-	datas, err := weibo.GetWeiboTopic(cookie)
-	if err != nil {
-		ding_talk.SendDingMessage("c594857d21850991a7a15de920ab3c69b626fbb5d0f7bd3671dc0861bf13fab3", err.Error())
+	datas, errMap := weibo.GetWeiboTopic(cookie)
+	if len(errMap) > 0 {
+		errStr, _ := json.Marshal(errMap)
+		ding_talk.SendDingMessage("c594857d21850991a7a15de920ab3c69b626fbb5d0f7bd3671dc0861bf13fab3", string(errStr))
 	}
 	if len(datas) == 0 {
 		return
