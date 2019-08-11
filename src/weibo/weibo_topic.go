@@ -12,7 +12,7 @@ func GetWeiboTopic(cookie string) (map[string]map[int]string, map[string]string)
 	errList := make(map[string]string, 0)
 	result := make(map[string]map[int]string)
 	for cat, name := range m {
-		result[name], err = ttt(cookie, cat)
+		result[name], err = GetWeiboTopicForOne(cookie, cat, 100)
 		if err != nil {
 			errList[m[cat]] = err.Error()
 		}
@@ -20,10 +20,9 @@ func GetWeiboTopic(cookie string) (map[string]map[int]string, map[string]string)
 	return result, errList
 }
 
-func ttt(cookie, cat string) (map[int]string, error) {
+func GetWeiboTopicForOne(cookie, cat string, pages int) (map[int]string, error) {
 	var err error
 	var a []byte
-	pages := 100
 	result := make(map[int]string)
 	rank := 0
 	for i := 1; i <= pages; i++ {

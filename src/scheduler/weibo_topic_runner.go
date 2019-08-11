@@ -14,10 +14,10 @@ type WeiboTopicRunner struct {
 }
 
 func (runner WeiboTopicRunner) Run() {
+	defer utils.CommonRecover()
 	userDatas := data.GetWeiboUserFollow("NobodyHu")
 	for _, me := range userDatas {
-		cookie := weibo.GetCookie(me.LoginName, me.Password)
-		GetWeiBoTopic(cookie)
+		GetWeiBoTopic(me.Cookie)
 	}
 
 }

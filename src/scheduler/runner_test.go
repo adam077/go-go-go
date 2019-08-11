@@ -16,4 +16,5 @@ func t2() {
 	//FollowWeibo{}.Run()
 	//WeiboChat{}.Run()
 	WeiboTopicRunner{}.Run()
+	//WeiboLoginChecker{1}.Run()
 }

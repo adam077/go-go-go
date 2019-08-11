@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go-go-go/src/data"
 	"go-go-go/src/ding-talk"
+	"go-go-go/src/utils"
 	"math/rand"
 	"sort"
 	"strconv"
@@ -32,6 +33,7 @@ var eatMap = map[string][]string{}
 // 12、18点发送投票结果
 
 func (runner EatWhat) Run() {
+	defer utils.CommonRecover()
 	switch runner.do {
 	case Choose:
 		ResetTask()

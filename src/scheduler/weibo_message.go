@@ -15,13 +15,12 @@ func (runner WeiboChat) Run() {
 	log.Info().Msg("start follow")
 	userDatas := data.GetWeiboUserFollow("")
 	for _, userData := range userDatas {
-		cookie := weibo.GetCookie(userData.LoginName, userData.Password)
 		chated := data.GetWeiboUserChat(userData.ID)
 		chatedMap := make(map[string]bool)
 		for _, chatedOne := range chated {
 			chatedMap[chatedOne.UID] = true
 		}
-		uids, _ := weibo.GetUserStatus(cookie, userData.Uid)
+		uids, _ := weibo.GetUserStatus(userData.Cookie, userData.Uid)
 		for uid, status := range uids {
 			if _, ok := chatedMap[uid]; ok {
 				continue
@@ -29,7 +28,7 @@ func (runner WeiboChat) Run() {
 			if status == "已关注" {
 				var s = 1 + rand.Intn(3)
 				time.Sleep(time.Duration(s) * time.Second)
-				huFen(userData.ID, cookie, uid)
+				huFen(userData.ID, userData.Cookie, uid)
 			}
 		}
 	}

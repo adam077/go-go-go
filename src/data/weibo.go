@@ -59,6 +59,7 @@ func UpdateWeiboFollower(targets []WeiboFollow) error {
 type WeiboUser struct {
 	BaseModelUUID
 	Name      string `gorm:"column:name;type:text"`
+	Cookie    string `gorm:"column:cookie;type:text"`
 	LoginName string `gorm:"column:login_name;type:text"`
 	Password  string `gorm:"column:password;type:text"`
 	Uid       string `gorm:"column:uid;type:text"`
@@ -70,6 +71,21 @@ type WeiboUser struct {
 
 func (WeiboUser) TableName() string {
 	return "weibo_user"
+}
+
+func UpdateCookie(id, cookie string) error {
+	dataConn := GetDataDB("default")
+	var target = map[string]interface{}{
+		"cookie": cookie,
+	}
+	one := WeiboUser{
+		BaseModelUUID: BaseModelUUID{
+			ID: id,
+		},
+	}
+
+	return dataConn.Model(&one).Update(target).Error
+
 }
 
 func GetWeiboUserFollow(name string) []*WeiboUser {

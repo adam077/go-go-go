@@ -12,6 +12,7 @@ type HotSpotRunner struct {
 }
 
 func (runner HotSpotRunner) Run() {
+	defer utils.CommonRecover()
 	GetWeiBo()
 	//GetBaiDu() // 百度接口变了
 	GetZhiHu()
