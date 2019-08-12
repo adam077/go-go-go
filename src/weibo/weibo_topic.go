@@ -28,6 +28,10 @@ func GetWeiboTopicForOne(cookie, cat string, pages int) (map[int]string, error) 
 	for i := 1; i <= pages; i++ {
 		var urlStr = "https://d.weibo.com/231650_ctg1_-_" + cat + "?Pl_Discover_Pt6Rank__4_page=" + strconv.Itoa(i)
 		a, err = utils.QueryGet(urlStr, map[string]string{"Cookie": cookie})
+		if err != nil {
+			log.Warn().Msg(err.Error())
+			a, err = utils.QueryGet(urlStr, map[string]string{"Cookie": cookie})
+		}
 		topics := utils.FindBetween(a, " alt=\\\"#", "#\\\" class=\\\"pic")
 		for _, topic := range topics {
 			rank += 1
