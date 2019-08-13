@@ -15,8 +15,12 @@ var Env = Cf{
 
 const (
 	// for config
-	Scheduler = "scheduler"
-	RandomEat = "random_eat"
+	SchedulerSpot              = "scheduler_spot"
+	SchedulerEatWhat           = "scheduler_eat_what"
+	SchedulerWeiboFollow       = "scheduler_weibo_follow"
+	SchedulerWeiboLoginChecker = "scheduler_weibo_login_checker"
+	SchedulerWeiboMessage      = "scheduler_weibo_message"
+	SchedulerWeiboTopic        = "scheduler_weibo_topic"
 )
 
 var configMap sync.Map

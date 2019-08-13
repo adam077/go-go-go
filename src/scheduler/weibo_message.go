@@ -3,6 +3,7 @@ package scheduler
 import (
 	"github.com/rs/zerolog/log"
 	"go-go-go/src/data"
+	"go-go-go/src/utils"
 	"go-go-go/src/weibo"
 	"math/rand"
 	"time"
@@ -12,7 +13,11 @@ type WeiboChat struct {
 }
 
 func (runner WeiboChat) Run() {
-	log.Info().Msg("start follow")
+	defer utils.CommonRecover()
+	if data.GetConfig(data.SchedulerWeiboMessage) == "" {
+		return
+	}
+	log.Info().Msg("start WeiboChat")
 	userDatas := data.GetWeiboUserFollow("")
 	for _, userData := range userDatas {
 		chated := data.GetWeiboUserChat(userData.ID)

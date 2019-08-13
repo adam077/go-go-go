@@ -13,6 +13,10 @@ type HotSpotRunner struct {
 
 func (runner HotSpotRunner) Run() {
 	defer utils.CommonRecover()
+	if data.GetConfig(data.SchedulerSpot) == "" {
+		return
+	}
+	log.Info().Msg("start HotSpotRunner")
 	GetWeiBo()
 	//GetBaiDu() // 百度接口变了
 	GetZhiHu()

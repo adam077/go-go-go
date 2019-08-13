@@ -4,19 +4,8 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
-	"go-go-go/src/api_query"
-	"go-go-go/src/utils"
 	"net/http"
 )
-
-func Haha1(c *gin.Context) {
-	params := struct {
-		BizId string `form:"businessId"`
-	}{}
-	c.ShouldBindQuery(&params)
-	a, _ := api_query.GetWeather()
-	utils.SuccessResp(c, "", a)
-}
 
 var upGrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {

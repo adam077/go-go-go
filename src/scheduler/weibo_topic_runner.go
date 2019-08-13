@@ -15,6 +15,10 @@ type WeiboTopicRunner struct {
 
 func (runner WeiboTopicRunner) Run() {
 	defer utils.CommonRecover()
+	if data.GetConfig(data.SchedulerWeiboTopic) == "" {
+		return
+	}
+	log.Info().Msg("start WeiboTopicRunner")
 	userDatas := data.GetWeiboUserFollow("NobodyHu")
 	for _, me := range userDatas {
 		GetWeiBoTopic(me.Cookie)

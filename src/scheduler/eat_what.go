@@ -2,6 +2,7 @@ package scheduler
 
 import (
 	"fmt"
+	"github.com/rs/zerolog/log"
 	"go-go-go/src/data"
 	"go-go-go/src/ding-talk"
 	"go-go-go/src/utils"
@@ -34,6 +35,10 @@ var eatMap = map[string][]string{}
 
 func (runner EatWhat) Run() {
 	defer utils.CommonRecover()
+	if data.GetConfig(data.SchedulerEatWhat) == "" {
+		return
+	}
+	log.Info().Msg("start EatWhat")
 	switch runner.do {
 	case Choose:
 		ResetTask()

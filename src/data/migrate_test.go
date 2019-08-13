@@ -5,7 +5,11 @@ import (
 )
 
 func TestMigrateTable(t *testing.T) {
-	t4()
+	//t1()
+	//t2()
+	//t3()
+	//t4()
+	//t5()
 }
 
 func t1() {

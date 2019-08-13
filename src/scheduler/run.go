@@ -12,7 +12,7 @@ func Run() {
 	jobrunner.Schedule("0 0 11,17 * * *", EatWhat{do: Choose})
 	jobrunner.Schedule("0 0 12,18 * * *", EatWhat{do: Result})
 
-	//jobrunner.Schedule("@every 10m", WeiboTopicRunner{})
+	jobrunner.Schedule("@every 10m", WeiboTopicRunner{})
 
-	jobrunner.Schedule("@every 3m", WeiboLoginChecker{0})
+	jobrunner.Schedule("@every 3m", WeiboLoginChecker{1})
 }

@@ -3,11 +3,11 @@ package test
 import "github.com/gin-gonic/gin"
 
 var MonitorRoutes = map[string]map[string]gin.HandlersChain{
-	"get_persons": {
+	"trigger_login": {
 		"GET": gin.HandlersChain{GetPersons},
 	},
-	"": {
-		"GET": gin.HandlersChain{Haha1},
+	"get_persons": {
+		"GET": gin.HandlersChain{GetPersons},
 	},
 	"hah": {
 		"GET": gin.HandlersChain{Haha2},
