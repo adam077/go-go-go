@@ -21,6 +21,7 @@ const (
 	SchedulerWeiboLoginChecker = "scheduler_weibo_login_checker"
 	SchedulerWeiboMessage      = "scheduler_weibo_message"
 	SchedulerWeiboTopic        = "scheduler_weibo_topic"
+	SchedulerWeiboGroupSender  = "scheduler_weibo_group_sender"
 )
 
 var configMap sync.Map

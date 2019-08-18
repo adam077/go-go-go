@@ -5,6 +5,7 @@ import (
 )
 
 func TestRunner(t *testing.T) {
+	//tt()
 	t2()
 }
 
@@ -16,5 +17,6 @@ func t2() {
 	//FollowWeibo{}.Run()
 	//WeiboChat{}.Run()
 	//WeiboTopicRunner{}.Run()
-	WeiboLoginChecker{1}.Run()
+	//WeiboLoginChecker{1}.Run()
+	groupSender()
 }

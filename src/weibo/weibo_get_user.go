@@ -1,6 +1,8 @@
 package weibo
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/rs/zerolog/log"
 	"go-go-go/src/utils"
 	"strconv"
@@ -89,7 +91,38 @@ func splitByss(str string, splits []string) []string {
 	}
 }
 
-func GetUsersFronGroup() ([]string, error) {
+func GetUsersFromGroup(groupId, cookie string) []string {
 	result := make([]string, 0)
-	return result, nil
+	a, err := utils.QueryGet("https://api.weibo.com/webim/query_group.json?query_member=1&id="+groupId+"&source=209678993",
+		map[string]string{"Cookie": cookie, "Referer": "https://api.weibo.com/chat/"})
+	if err == nil {
+		fmt.Println(string(a))
+		var temp UsersFromGroup
+		json.Unmarshal(a, &temp)
+		for _, user := range temp.MemberInfos {
+			if user.Level > 2 {
+				result = append(result, strconv.Itoa(user.Uid))
+			}
+		}
+		for _, user := range temp.MemberInfos {
+			if user.Level == 2 {
+				result = append(result, strconv.Itoa(user.Uid))
+			}
+		}
+		for _, user := range temp.MemberInfos {
+			if user.Level == 1 {
+				result = append(result, strconv.Itoa(user.Uid))
+			}
+		}
+	}
+	return result
+}
+
+type UsersFromGroup struct {
+	MemberInfos []One `json:"member_infos"`
+}
+
+type One struct {
+	Uid   int `json:"uid"`
+	Level int `json:"level"`
 }

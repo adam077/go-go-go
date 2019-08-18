@@ -2,9 +2,25 @@ package scheduler
 
 import (
 	"github.com/bamzi/jobrunner"
+	"github.com/rs/zerolog/log"
+	"go-go-go/src/data"
 )
 
 func Run() {
+	runner := []string{
+		data.SchedulerSpot,
+		data.SchedulerEatWhat,
+		data.SchedulerWeiboFollow,
+		data.SchedulerWeiboLoginChecker,
+		data.SchedulerWeiboMessage,
+		data.SchedulerWeiboTopic,
+		data.SchedulerWeiboGroupSender,
+	}
+	for x := range runner {
+		if data.GetConfig(runner[x]) != "" {
+			log.Info().Str("runner", runner[x]).Msg("run init")
+		}
+	}
 	jobrunner.Start(32, 0)
 
 	jobrunner.Schedule("@every 5m", HotSpotRunner{})
@@ -15,4 +31,5 @@ func Run() {
 	jobrunner.Schedule("@every 10m", WeiboTopicRunner{})
 
 	jobrunner.Schedule("@every 3m", WeiboLoginChecker{1})
+	jobrunner.Schedule("@every 10m", GroupSender{})
 }
