@@ -7,7 +7,6 @@ import (
 	"go-go-go/src/utils"
 	"net/url"
 	"strconv"
-	"strings"
 )
 
 func Follow(uid, cookie string) error {
@@ -19,7 +18,7 @@ func Follow(uid, cookie string) error {
 	form := url.Values{}
 	form.Add("uid", uid)
 	form.Add("refer_flag", "1005050001_")
-	result, err := utils.QueryPost("https://weibo.com/aj/f/followed", nil, headers, "x-www-form-urlencoded", strings.NewReader(form.Encode()))
+	result, err := utils.QueryPostWithFormData("https://weibo.com/aj/f/followed", nil, headers, form)
 	if err != nil {
 		log.Error().Msg(err.Error())
 		return err
@@ -48,7 +47,7 @@ func SendMessage(cookie, uid, msg string) error {
 	form.Add("text", msg)
 	form.Add("uid", uid)
 	form.Add("source", "209678993")
-	result, err := utils.QueryPost("https://api.weibo.com/webim/2/direct_messages/new.json", nil, headers, "x-www-form-urlencoded", strings.NewReader(form.Encode()))
+	result, err := utils.QueryPostWithFormData("https://api.weibo.com/webim/2/direct_messages/new.json", nil, headers, form)
 	if err != nil {
 		log.Error().Msg(err.Error())
 		return err
@@ -79,7 +78,7 @@ func SendMessageToGroup(cookie, group, msg string) error {
 	form.Add("content", msg)
 	form.Add("id", group)
 	form.Add("source", "209678993")
-	result, err := utils.QueryPost("https://api.weibo.com/webim/groupchat/send_message.json", nil, headers, "x-www-form-urlencoded", strings.NewReader(form.Encode()))
+	result, err := utils.QueryPostWithFormData("https://api.weibo.com/webim/groupchat/send_message.json", nil, headers, form)
 	if err != nil {
 		log.Error().Msg(err.Error())
 		return err
