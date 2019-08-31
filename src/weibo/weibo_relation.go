@@ -13,7 +13,7 @@ func GetUserStatus(cookie, uid string) (map[string]string, error) {
 	result := make(map[string]string)
 	for i := 1; i <= pages; i++ {
 		var urlStr = "https://weibo.com/p/100505" + uid + "/myfollow?Pl_Official_RelationMyfollow__95_page=" + strconv.Itoa(i)
-		a, err := utils.QueryGet(urlStr, map[string]string{"Cookie": cookie})
+		a, err := utils.QueryGet(urlStr, nil, map[string]string{"Cookie": cookie})
 		if err != nil {
 			return result, err
 		}

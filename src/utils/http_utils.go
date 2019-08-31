@@ -11,11 +11,16 @@ var HttpClient = &http.Client{
 	Timeout: 15 * time.Second,
 }
 
-func QueryGet(url string, headers map[string]string) ([]byte, error) {
+func QueryGet(url string, params map[string]string, headers map[string]string) ([]byte, error) {
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+	q := req.URL.Query()
+	for k, v := range params {
+		q.Set(k, v)
+	}
+	req.URL.RawQuery = q.Encode()
 	for x := range headers {
 		req.Header.Set(x, headers[x])
 	}
@@ -27,12 +32,17 @@ func QueryGet(url string, headers map[string]string) ([]byte, error) {
 	return ioutil.ReadAll(resp.Body)
 }
 
-func QueryPost(url string, headers map[string]string, queryType string, body io.Reader) ([]byte, error) {
+func QueryPost(url string, params map[string]string, headers map[string]string, queryType string, body io.Reader) ([]byte, error) {
 
 	req, err := http.NewRequest(http.MethodPost, url, body)
 	if err != nil {
 		return nil, err
 	}
+	q := req.URL.Query()
+	for k, v := range params {
+		q.Set(k, v)
+	}
+	req.URL.RawQuery = q.Encode()
 	for x := range headers {
 		req.Header.Set(x, headers[x])
 	}

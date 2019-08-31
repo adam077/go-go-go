@@ -15,7 +15,7 @@ func GetUsers(topic string, cookie string, pages int) ([]string, error) {
 	result := make([]string, 0)
 	aMap := make(map[int]bool)
 	for i := 1; i <= pages; i++ {
-		a, err := utils.QueryGet("https://s.weibo.com/weibo/"+topic+"?topnav=1&wvr=6&b=1&page="+strconv.Itoa(i), map[string]string{"Cookie": cookie})
+		a, err := utils.QueryGet("https://s.weibo.com/weibo/"+topic+"?topnav=1&wvr=6&b=1&page="+strconv.Itoa(i), nil, map[string]string{"Cookie": cookie})
 		if err != nil {
 			return result, err
 		}
@@ -37,7 +37,7 @@ func GetUsers(topic string, cookie string, pages int) ([]string, error) {
 func GetUsersFromHufen(cookie string, pages int) ([]string, error) {
 	result := make([]string, 0)
 	for i := 1; i <= pages; i++ {
-		a, err := utils.QueryGet("https://s.weibo.com/realtime?q=%23%E4%BA%92%E7%B2%89%23&rd=realtime&tw=realtime&Refer=weibo_realtime&page="+strconv.Itoa(i), map[string]string{"Cookie": cookie})
+		a, err := utils.QueryGet("https://s.weibo.com/realtime?q=%23%E4%BA%92%E7%B2%89%23&rd=realtime&tw=realtime&Refer=weibo_realtime&page="+strconv.Itoa(i), nil, map[string]string{"Cookie": cookie})
 		if err != nil {
 			return result, err
 		}
@@ -51,7 +51,7 @@ func GetUsersFromHufen(cookie string, pages int) ([]string, error) {
 func GetUsersFromCantSleep(cookie string, pages int) ([]string, error) {
 	result := make([]string, 0)
 	for i := 1; i <= pages; i++ {
-		a, err := utils.QueryGet("https://s.weibo.com/realtime?q=%E7%9D%A1%E4%B8%8D%E7%9D%80&rd=realtime&tw=realtime&Refer=weibo_realtime&page="+strconv.Itoa(i), map[string]string{"Cookie": cookie})
+		a, err := utils.QueryGet("https://s.weibo.com/realtime?q=%E7%9D%A1%E4%B8%8D%E7%9D%80&rd=realtime&tw=realtime&Refer=weibo_realtime&page="+strconv.Itoa(i), nil, map[string]string{"Cookie": cookie})
 		if err != nil {
 			return result, err
 		}
@@ -65,7 +65,7 @@ func GetUsersFromCantSleep(cookie string, pages int) ([]string, error) {
 func GetUsersFromRealTimeWord(word, cookie string, pages int) ([]string, error) {
 	result := make([]string, 0)
 	for i := 1; i <= pages; i++ {
-		a, err := utils.QueryGet("https://s.weibo.com/realtime?q="+word+"&rd=realtime&tw=realtime&Refer=weibo_realtime&page="+strconv.Itoa(i), map[string]string{"Cookie": cookie})
+		a, err := utils.QueryGet("https://s.weibo.com/realtime?q="+word+"&rd=realtime&tw=realtime&Refer=weibo_realtime&page="+strconv.Itoa(i), nil, map[string]string{"Cookie": cookie})
 		if err != nil {
 			return result, err
 		}
@@ -94,7 +94,7 @@ func splitByss(str string, splits []string) []string {
 func GetUsersFromGroup(groupId, cookie string) []string {
 	result := make([]string, 0)
 	a, err := utils.QueryGet("https://api.weibo.com/webim/query_group.json?query_member=1&id="+groupId+"&source=209678993",
-		map[string]string{"Cookie": cookie, "Referer": "https://api.weibo.com/chat/"})
+		nil, map[string]string{"Cookie": cookie, "Referer": "https://api.weibo.com/chat/"})
 	if err == nil {
 		fmt.Println(string(a))
 		var temp UsersFromGroup

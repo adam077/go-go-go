@@ -8,7 +8,7 @@ import (
 func GetGroupsFromContacts(cookie string) []string {
 	result := make([]string, 0)
 	a, err := utils.QueryGet("https://api.weibo.com/webim/2/direct_messages/contacts.json?source=209678993",
-		map[string]string{"Cookie": cookie, "Referer": "https://api.weibo.com/chat/"})
+		nil, map[string]string{"Cookie": cookie, "Referer": "https://api.weibo.com/chat/"})
 	if err == nil {
 		var temp WeiboContacts
 		json.Unmarshal(a, &temp)
