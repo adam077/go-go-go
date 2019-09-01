@@ -31,7 +31,7 @@ func SendWeiBo(cookie, text string, picIds []string) (string, error) {
 	var codeResult FollowResp
 	json.Unmarshal(result, &codeResult)
 	if codeResult.Code != "100000" {
-		log.Error().Str("text", text).Msg(codeResult.Code)
+		log.Error().Str("text", text).Msg(string(result))
 		return "", errors.New(codeResult.Code)
 	}
 	status := utils.FindBetween(result, "mid=\\\"", "\\\"  action-type")

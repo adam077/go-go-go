@@ -34,7 +34,7 @@ func updloadPic(base64 string) string {
 		"file_source": " 1",
 	}
 	header := map[string]string{
-		"Cookie":                    cookie,
+		"Cookie":                    Cookie,
 		"Accept":                    "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
 		"Accept-Encoding":           "gzip, deflate, br",
 		"Accept-Language":           "zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7",

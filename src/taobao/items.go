@@ -3,88 +3,67 @@ package taobao
 import (
 	"encoding/json"
 	"fmt"
+	"go-go-go/src/single-cache"
 	"go-go-go/src/utils"
-	"math"
 	"net/url"
 	"strconv"
-	"strings"
 	"time"
 )
 
 var count = 9
+var mins = 90
 
-func getItemList(word string) {
+func GetItemList(floorId, word, taobaoToken string) Items {
 	header := map[string]string{
-		"cookie": TaobaoToken,
+		"cookie": taobaoToken,
 	}
 	b := map[string]interface{}{
-		"floorId":  "20392",
 		"pageNum":  0,
 		"pageSize": 60,
 		"refpid":   "mm_121000339_0_0",
-		"variableMap": map[string]interface{}{
+	}
+	if floorId != "" {
+		b["floorId"] = floorId
+	} else {
+		b["floorId"] = "20392"
+		b["variableMap"] = map[string]interface{}{
 			"fn": "search",
 			"q":  word,
 			"_t": strconv.Itoa(int(time.Now().UnixNano() / 1000000)),
 			//"coupon_amount_filter": "1~",
 			//"toPage": 1,
 			//"sort":   "sales:des",
-		},
+		}
 	}
 	bStr, _ := json.Marshal(b)
 	formData := url.Values{}
 	formData.Add("_data_", string(bStr))
-	do := 0
-	for {
-		a, err := utils.QueryPostWithFormData("https://pub.alimama.com/openapi/json2/1/gateway.unionpub/optimus.material.json",
-			nil, header, formData)
-		if err != nil {
+	var result Items
+	a, _ := utils.QueryPostWithFormData("https://pub.alimama.com/openapi/json2/1/gateway.unionpub/optimus.material.json", nil, header, formData)
+	var resultTemp Items
+	fmt.Println(string(a))
+	json.Unmarshal(a, &resultTemp)
+	for _, item := range resultTemp.Model.Recommend.ResultList {
+		if item.CouponAmount == "" {
+			//log.Info().Str("item.ItemName", item.ItemName).Msg("")
+			continue
 		}
-		var result Items
-		//fmt.Println(string(a))
-		json.Unmarshal(a, &result)
-		fmt.Println("|折扣力度|" + word)
-		for _, item := range result.Model.Recommend.ResultList {
-			if item.CouponAmount == "" {
-				//log.Info().Str("item.ItemName", item.ItemName).Msg("")
-				continue
-			}
-			after, _ := strconv.ParseFloat(item.PriceAfterCoupon, 64)
-			coupon, _ := strconv.ParseFloat(item.CouponAmount, 64)
-			all := after + coupon
-			if all <= 0 {
-				continue
-			}
-			sale := int(math.Floor(10 * coupon / all))
-			if sale > 0 {
-				fmt.Print("|")
-				for i := 0; i < 10; i++ {
-					if i < sale {
-						fmt.Print("!")
-					} else {
-						fmt.Print(" ")
-					}
-				}
-				do += 1
-				fmt.Print("|")
-				item.ItemName = strings.Replace(item.ItemName, "<span class=H>", "", -1)
-				item.ItemName = strings.Replace(item.ItemName, "</span>", "", -1)
-				fmt.Println(show_substr(item.ItemName, 30))
-				//fmt.Print(" ")
-				//fmt.Println(getItemCode(item.ItemId))
-				if do >= count {
-					break
-				}
+		_, ok := single_cache.Get(item.ItemId)
+		if ok {
+			continue
+		} else {
+			single_cache.Set(item.ItemId, "", 60*mins)
+			result.Model.Recommend.ResultList = append(result.Model.Recommend.ResultList, item)
+			if len(result.Model.Recommend.ResultList) >= count {
+				break
 			}
 		}
-		if do >= count {
-			break
-		}
-		do += 1
 	}
+
+	return result
 }
 
-func show_substr(s string, l int) string {
+func ShowSubstr(s string, l int) string {
 	if len(s) <= l {
 		return s
 	}
@@ -113,6 +92,7 @@ type Items struct {
 				ItemId            string `json:"itemId"`
 				ItemName          string `json:"itemName"`
 				Pic               string `json:"pic"`
+				PromotionPrice    string `json:"promotionPrice"`    // 原价
 				PriceAfterCoupon  string `json:"priceAfterCoupon"`  // 券后价
 				CouponAmount      string `json:"couponAmount"`      // 券额
 				CouponTotalCount  int    `json:"couponTotalCount"`  // 总数
@@ -122,7 +102,7 @@ type Items struct {
 	} `json:"model"`
 }
 
-func getItemCode(itemId string) string {
+func GetItemCode(itemId, taobaoToken string) Code {
 	params := map[string]string{
 		"shareUserType":    "1",
 		"unionBizCode":     "union_pub",
@@ -135,15 +115,13 @@ func getItemCode(itemId string) string {
 		"needQueryQtz":     "true",
 	}
 	header := map[string]string{
-		"cookie": TaobaoToken,
+		"cookie": taobaoToken,
 	}
-	a, err := utils.QueryGet("https://pub.alimama.com/openapi/param2/1/gateway.unionpub/shareitem.json",
+	a, _ := utils.QueryGet("https://pub.alimama.com/openapi/param2/1/gateway.unionpub/shareitem.json",
 		params, header)
-	if err != nil {
-	}
 	var result Code
 	json.Unmarshal(a, &result)
-	return result.Data.ShortLinkInfo.CouponUrl
+	return result
 
 }
 

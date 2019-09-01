@@ -11,6 +11,7 @@ import (
 var Env = Cf{
 	SelfUrl:     "http://139.180.202.66:8081",
 	PostgresUrl: "postgres://postgres:password@139.180.202.66:5432/%s?sslmode=disable",
+	//PostgresUrl: "postgres://postgres:hu5845@localhost:5432/%s?sslmode=disable",
 }
 
 const (
@@ -22,6 +23,7 @@ const (
 	SchedulerWeiboMessage      = "scheduler_weibo_message"
 	SchedulerWeiboTopic        = "scheduler_weibo_topic"
 	SchedulerWeiboGroupSender  = "scheduler_weibo_group_sender"
+	SchedulerTaobaoToWeibo     = "scheduler_taobao_to_weibo"
 )
 
 var configMap sync.Map

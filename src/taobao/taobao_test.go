@@ -5,6 +5,6 @@ import (
 )
 
 func Test1(t *testing.T) {
-	getItemList("婴儿手推车")
-	//getItemCode("534564175521")
+	GetItemList("", "婴儿手推车", Token)
+	//GetItemCode("534564175521", Token)
 }

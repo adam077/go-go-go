@@ -11,10 +11,10 @@ func TestWeibo(t *testing.T) {
 }
 
 func t1() {
-	uids, _ := GetUsers("互粉", cookie, 3)
+	uids, _ := GetUsers("互粉", Cookie, 3)
 	for _, uid := range uids {
 		time.Sleep(10 * time.Second)
-		err := Follow(uid, cookie)
+		err := Follow(uid, Cookie)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -22,17 +22,17 @@ func t1() {
 }
 
 func t2() {
-	fmt.Println(GetUserStatus(cookie, "6491407817"))
+	fmt.Println(GetUserStatus(Cookie, "6491407817"))
 }
 
 func t3() {
-	GetUsersFromHufen(cookie, 3)
+	GetUsersFromHufen(Cookie, 3)
 }
 
 func t4() {
 
-	mid, _ := SendWeiBo(cookie, time.Now().String(), nil)
-	SendWeiBoComment(cookie, mid, time.Now().String())
+	mid, _ := SendWeiBo(Cookie, time.Now().String(), nil)
+	SendWeiBoComment(Cookie, mid, time.Now().String())
 }
 
 func t5() {

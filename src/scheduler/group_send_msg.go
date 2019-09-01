@@ -20,8 +20,8 @@ func (runner GroupSender) Run() {
 }
 
 func groupSender() {
-	groups := weibo.GetGroupsFromContacts(WeiboCookie)
+	groups := weibo.GetGroupsFromContacts(weibo.Cookie)
 	for _, group := range groups {
-		weibo.SendMessageToGroup(WeiboCookie, group, "有！粉！必！回！")
+		weibo.SendMessageToGroup(weibo.Cookie, group, "有！粉！必！回！")
 	}
 }

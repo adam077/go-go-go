@@ -10,9 +10,9 @@ import (
 // 4074460921980762 抛弃
 
 func tt() {
-	users := weibo.GetUsersFromGroup("4074460921980762", WeiboCookie)
+	users := weibo.GetUsersFromGroup("4074460921980762", weibo.Cookie)
 	var i = 0
-	followMap, _ := weibo.GetUserStatus(WeiboCookie, "6491407817")
+	followMap, _ := weibo.GetUserStatus(weibo.Cookie, "6491407817")
 	for _, userUid := range users {
 		if _, ok := followMap[userUid]; ok {
 			fmt.Println("continue " + userUid)
@@ -20,12 +20,12 @@ func tt() {
 		}
 		var sleep = 2 + rand.Intn(4)
 		time.Sleep(time.Duration(sleep) * time.Second)
-		err := weibo.Follow(userUid, WeiboCookie)
+		err := weibo.Follow(userUid, weibo.Cookie)
 		if err != nil {
 			fmt.Println(err)
 			break
 		}
-		weibo.SendMessage(WeiboCookie, userUid, "哈喽，在互粉群中看到了你~可以互粉吗~")
+		weibo.SendMessage(weibo.Cookie, userUid, "哈喽，在互粉群中看到了你~可以互粉吗~")
 		fmt.Println(userUid)
 		i += 1
 		if i > 80 {

@@ -15,6 +15,7 @@ func Run() {
 		data.SchedulerWeiboMessage,
 		data.SchedulerWeiboTopic,
 		data.SchedulerWeiboGroupSender,
+		data.SchedulerTaobaoToWeibo,
 	}
 	for x := range runner {
 		if data.GetConfig(runner[x]) != "" {
@@ -32,4 +33,5 @@ func Run() {
 
 	jobrunner.Schedule("@every 3m", WeiboLoginChecker{1})
 	jobrunner.Schedule("@every 10m", GroupSender{})
+	jobrunner.Schedule("0 0/5 * * * *", TaobaoToWeibo{})
 }
