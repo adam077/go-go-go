@@ -8,6 +8,9 @@ import (
 )
 
 func GetWeiboTopic(cookie string) (map[string]map[int]string, map[string]string) {
+	/*
+		获取微博话题
+	*/
 	var err error
 	errList := make(map[string]string, 0)
 	result := make(map[string]map[int]string)
@@ -21,6 +24,9 @@ func GetWeiboTopic(cookie string) (map[string]map[int]string, map[string]string)
 }
 
 func GetWeiboTopicForOne(cookie, cat string, pages int) (map[int]string, error) {
+	/*
+		获取微博话题列表
+	*/
 	var err error
 	var a []byte
 	result := make(map[int]string)

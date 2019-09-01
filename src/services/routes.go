@@ -37,6 +37,13 @@ func registerRouters(engine *gin.Engine) {
 
 	engine.Static("/assets", "./src/assets")
 	engine.StaticFS("/assets_list", http.Dir("src/assets"))
+
+	engine.GET("/reeee/asdddd", func(c *gin.Context) {
+		//c.Redirect(http.StatusMovedPermanently, "http://www.google.com/")
+
+		c.Header("Content-Type", "text/html; charset=utf-8")
+		c.String(200, `<html><body><a href=https://s.click.taobao.com/xfNI42w target=_blank>本文本</a></body> </html>`)
+	})
 }
 
 func includeRoutes(group *gin.RouterGroup, routes map[string]map[string]gin.HandlersChain) {

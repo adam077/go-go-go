@@ -6,6 +6,9 @@ import (
 )
 
 func GetGroupsFromContacts(cookie string) []string {
+	/*
+		在联系人中获得群组
+	*/
 	result := make([]string, 0)
 	a, err := utils.QueryGet("https://api.weibo.com/webim/2/direct_messages/contacts.json?source=209678993",
 		nil, map[string]string{"Cookie": cookie, "Referer": "https://api.weibo.com/chat/"})

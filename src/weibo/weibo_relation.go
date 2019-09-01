@@ -8,6 +8,9 @@ import (
 )
 
 func GetUserStatus(cookie, uid string) (map[string]string, error) {
+	/*
+		获取我关注的人的信息
+	*/
 	pages := 100
 	// 获取用户状态
 	result := make(map[string]string)

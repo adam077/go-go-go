@@ -10,6 +10,9 @@ import (
 )
 
 func Follow(uid, cookie string) error {
+	/*
+		关注一个人
+	*/
 	headers := map[string]string{
 		"Cookie":  cookie,
 		"Referer": "https://weibo.com/u/" + uid,
@@ -38,6 +41,9 @@ type FollowResp struct {
 }
 
 func SendMessage(cookie, uid, msg string) error {
+	/*
+		发送私信
+	*/
 	headers := map[string]string{
 		"Cookie":  cookie,
 		"Referer": "https://api.weibo.com/chat/",
@@ -69,6 +75,9 @@ type MsgResp struct {
 }
 
 func SendMessageToGroup(cookie, group, msg string) error {
+	/*
+		发群消息
+	*/
 	headers := map[string]string{
 		"Cookie":  cookie,
 		"Referer": "https://api.weibo.com/chat/",

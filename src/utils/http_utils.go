@@ -3,6 +3,7 @@ package utils
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -48,9 +49,10 @@ func QueryPostWithFormData(url string, params map[string]string, headers map[str
 	req.URL.RawQuery = q.Encode()
 	for x := range headers {
 		req.Header.Set(x, headers[x])
-		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
 	resp, err := HttpClient.Do(req)
+	fmt.Println(resp.Header.Get("Location"))
 	if err != nil {
 		return nil, err
 	}
@@ -71,8 +73,8 @@ func QueryPostWithJson(url string, params map[string]string, headers map[string]
 	req.URL.RawQuery = q.Encode()
 	for x := range headers {
 		req.Header.Set(x, headers[x])
-		req.Header.Set("Content-Type", "application/json")
 	}
+	req.Header.Set("Content-Type", "application/json")
 	resp, err := HttpClient.Do(req)
 	if err != nil {
 		return nil, err
