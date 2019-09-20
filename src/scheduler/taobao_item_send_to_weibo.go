@@ -5,12 +5,14 @@ import (
 	"github.com/rs/zerolog/log"
 	"go-go-go/src/data"
 	"go-go-go/src/ding-talk"
+	"go-go-go/src/single-cache"
 	"go-go-go/src/taobao"
 	"go-go-go/src/utils"
 	"go-go-go/src/weibo"
 	"math"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type ItemType struct {
@@ -19,8 +21,19 @@ type ItemType struct {
 	FloorId string
 }
 
-type TaobaoToWeibo struct {
+var ItemTypes = []ItemType{
+	{"食品", []string{"零食"}, "19452"},
+	//{"家居家装", []string{"家居"}, "19461"},
+	{"母婴", []string{"母婴", "宝妈"}, "19457"},
+	//{"数码家电", []string{"数码", "手机"}, "19458"},
+	//{"全部", []string{}, "19450"},
 }
+
+type TaobaoToWeibo struct {
+	One ItemType
+}
+
+var mins = 90
 
 func (runner TaobaoToWeibo) Run() {
 	defer utils.CommonRecover()
@@ -30,13 +43,7 @@ func (runner TaobaoToWeibo) Run() {
 	taobaoToken := data.GetConfig("taobao_cookie")
 	weiboCookie := data.GetConfig("weibo_cookie")
 	log.Info().Msg("start TaobaoToWeibo")
-	for _, one := range []ItemType{
-		{"食品", []string{"零食"}, "19452"},
-		{"家居家装", []string{"家居"}, "19461"},
-		{"母婴", []string{"母婴", "宝妈"}, "19457"},
-		{"数码家电", []string{"数码", "手机"}, "19458"},
-		//{"全部", []string{}, "19450"},
-	} {
+	for _, one := range []ItemType{runner.One} {
 		doForWord(one, taobaoToken, weiboCookie)
 	}
 }
@@ -44,14 +51,15 @@ func (runner TaobaoToWeibo) Run() {
 func doForWord(word ItemType, taobaoCookie, weiboCookie string) {
 	var items taobao.Items
 	items = taobao.GetItemList(word.FloorId, word.Name, taobaoCookie)
-	weiboContent := "0|打折比例| "
+	weiboContent := "0|折扣|(原价) "
 	for _, topic := range word.Topics {
 		weiboContent += fmt.Sprintf("#%s# ", topic)
 	}
-	weiboContent += "\n"
+	weiboContent += time.Now().Format(utils.TIME_DEFAULT_FORMAT) + "\n"
+	weiboContent += "copy code to taobao or click url\n"
 	i := 0
 	picList := make([]string, 0)
-	toComment := make([]string, 0)
+	//toComment := make([]string, 0)
 	log.Info().Int("count", len(items.Model.Recommend.ResultList)).Msg("getResultList")
 	for _, item := range items.Model.Recommend.ResultList {
 		weiboContentOneLine := ""
@@ -65,40 +73,47 @@ func doForWord(word ItemType, taobaoCookie, weiboCookie string) {
 		if sale > 0 {
 			i += 1
 			weiboContentOneLine += fmt.Sprintf("%d|", i)
-			for i := 0; i < 10; i++ {
-				if i < sale {
-					weiboContentOneLine += "!"
-				} else {
-					weiboContentOneLine += " "
-				}
-			}
-			log.Info().Str("itemId", item.ItemId).Msg("item execute")
-			weiboContentOneLine += fmt.Sprintf("|原价(%s)", item.PromotionPrice)
+
+			//for i := 0; i < 10; i++ {
+			//	if i < sale {
+			//		weiboContentOneLine += "!"
+			//	} else {
+			//		weiboContentOneLine += " "
+			//	}
+			//}
+			weiboContentOneLine += fmt.Sprintf("%d折", sale)
+
+			weiboContentOneLine += fmt.Sprintf("|(%s)", item.PromotionPrice)
 			item.ItemName = strings.Replace(item.ItemName, "<span class=H>", "", -1)
 			item.ItemName = strings.Replace(item.ItemName, "</span>", "", -1)
-			weiboContentOneLine += taobao.ShowSubstr(item.ItemName, 18)
-			weiboContentOneLine += "...\n"
+			weiboContentOneLine += taobao.ShowSubstr(item.ItemName, 10)
+			weiboContentOneLine += fmt.Sprintf(" ... %s\n", "http://o26166b137.wicp.vip/tb/"+item.ItemId)
 			picList = append(picList, weibo.GetUrlPicId("http:"+item.Pic))
 			log.Info().Str("itemId", item.ItemId).Msg("item code got")
-			code := taobao.GetItemCode(item.ItemId, taobaoCookie)
-			toComment = append(toComment, fmt.Sprintf("%d 复制#%s#至App或点击 %s",
-				i, code.Data.TaoTokenInfo.CouponUrl, code.Data.ShortLinkInfo.CouponUrl))
+			//code := taobao.GetItemCode(item.ItemId, taobaoCookie)
+			//weiboContentOneLine += fmt.Sprintf("%d #%s# | %s \n", i, code.Data.TaoTokenInfo.CouponUrl, code.Data.ShortLinkInfo.CouponUrl)
+			//toComment = append(toComment, fmt.Sprintf("%d copy#%s#OrClick %s", i, code.Data.TaoTokenInfo.CouponUrl, code.Data.ShortLinkInfo.CouponUrl))
+			//toComment = append(toComment, fmt.Sprintf("%d #%s# | %s", i, code.Data.TaoTokenInfo.CouponUrl, code.Data.UrlTransInfo.CouponUrl))
 			weiboContent += weiboContentOneLine
 		}
 	}
 
-	for x := range toComment {
-		weiboContent += fmt.Sprintf("\n %s", toComment[x])
-	}
+	//weiboContent += fmt.Sprintf("\n %s \n", " Copy       |       Click")
+	//for x := range toComment {
+	//	weiboContent += fmt.Sprintf("\n %s", toComment[x])
+	//}
 	fmt.Println(weiboContent)
 	if len(picList) <= 0 {
 		log.Error().Msg("no targets")
 		ding_talk.SendDingMessage(data.GetConfig("ding"), "no targets")
 		return
 	}
+	for _, item := range items.Model.Recommend.ResultList {
+		single_cache.Set(item.ItemId, "", 60*mins)
+	}
 	mid, err := weibo.SendWeiBo(weiboCookie, weiboContent, picList)
 	if err != nil {
-		ding_talk.SendDingMessage(data.GetConfig("ding"), mid+"weibo err")
+		ding_talk.SendDingMessage(data.GetConfig("ding"), mid+"weibo send err")
 		return
 	}
 	//time.Sleep(10 * time.Second)

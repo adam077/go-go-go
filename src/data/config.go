@@ -9,9 +9,9 @@ import (
 )
 
 var Env = Cf{
-	SelfUrl:     "http://139.180.202.66:8081",
-	PostgresUrl: "postgres://postgres:password@139.180.202.66:5432/%s?sslmode=disable",
-	//PostgresUrl: "postgres://postgres:hu5845@localhost:5432/%s?sslmode=disable",
+	SelfUrl: "http://139.180.202.66:8081",
+	//PostgresUrl: "postgres://postgres:password@139.180.202.66:5432/%s?sslmode=disable",
+	PostgresUrl: "postgres://postgres:hu5845@localhost:5432/%s?sslmode=disable",
 }
 
 const (

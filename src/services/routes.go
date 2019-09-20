@@ -1,7 +1,10 @@
 package services
 
 import (
+	"fmt"
+	"go-go-go/src/data"
 	"go-go-go/src/services/test"
+	"go-go-go/src/taobao"
 	"net/http"
 
 	"github.com/gin-contrib/cors"
@@ -38,11 +41,15 @@ func registerRouters(engine *gin.Engine) {
 	engine.Static("/assets", "./src/assets")
 	engine.StaticFS("/assets_list", http.Dir("src/assets"))
 
-	engine.GET("/reeee/asdddd", func(c *gin.Context) {
+	engine.GET("/tb/:itemId", func(c *gin.Context) {
+		itemId := c.Param("itemId")
+		code := taobao.GetItemCode(itemId, data.GetConfig("taobao_cookie"))
 		//c.Redirect(http.StatusMovedPermanently, "http://www.google.com/")
 
 		c.Header("Content-Type", "text/html; charset=utf-8")
-		c.String(200, `<html><body><a href=https://s.click.taobao.com/xfNI42w target=_blank>本文本</a></body> </html>`)
+		html := fmt.Sprintf("<html><body><a href=%s target=_blank>点击跳转至淘宝商品页</a>  </br> <p>或复制代码 %s 至淘宝APP</p></body> </html>",
+			code.Data.ShortLinkInfo.CouponUrl, code.Data.TaoTokenInfo.CouponUrl)
+		c.String(200, html)
 	})
 }
 

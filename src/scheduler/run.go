@@ -33,5 +33,6 @@ func Run() {
 
 	jobrunner.Schedule("@every 3m", WeiboLoginChecker{1})
 	jobrunner.Schedule("@every 10m", GroupSender{})
-	jobrunner.Schedule("0 0/5 * * * *", TaobaoToWeibo{})
+	jobrunner.Schedule("0 0/4 * * * *", TaobaoToWeibo{ItemTypes[0]})
+	jobrunner.Schedule("0 2/4 * * * *", TaobaoToWeibo{ItemTypes[1]})
 }

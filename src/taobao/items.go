@@ -11,7 +11,6 @@ import (
 )
 
 var count = 9
-var mins = 90
 
 func GetItemList(floorId, word, taobaoToken string) Items {
 	header := map[string]string{
@@ -52,7 +51,6 @@ func GetItemList(floorId, word, taobaoToken string) Items {
 		if ok {
 			continue
 		} else {
-			single_cache.Set(item.ItemId, "", 60*mins)
 			result.Model.Recommend.ResultList = append(result.Model.Recommend.ResultList, item)
 			if len(result.Model.Recommend.ResultList) >= count {
 				break
@@ -133,5 +131,8 @@ type Code struct {
 		TaoTokenInfo struct {
 			CouponUrl string `json:"couponUrl"`
 		} `json:"taoTokenInfo"`
+		UrlTransInfo struct {
+			CouponUrl string `json:"couponUrl"`
+		} `json:"urlTransInfo"`
 	} `json:"data"`
 }
