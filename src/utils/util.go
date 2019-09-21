@@ -75,8 +75,6 @@ func GetUUID() string {
 
 func FindBetween(str []byte, left, right string) []string {
 
-	return FindBetweenInstr(string(str), left, right)
-
 	// result := make([]string, 0)
 	// // var r = fmt.Sprintf("%s[^%s]+%s", left, right, right) // 这个只适合单个
 
@@ -90,6 +88,8 @@ func FindBetween(str []byte, left, right string) []string {
 	// // https://www.runoob.com/regexp/regexp-syntax.html
 	// // https://www.debuggex.com/
 	// return result
+
+	return FindBetweenInstr(string(str), left, right)
 }
 
 func FindBetweenInstr(str string, left, right string) []string {
